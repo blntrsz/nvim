@@ -53,8 +53,6 @@ return {
 			},
 		})
 
-		local cmp_select = { behavior = cmp.SelectBehavior.Select }
-
 		cmp.setup({
 			snippet = {
 				expand = function(args)
@@ -62,8 +60,8 @@ return {
 				end,
 			},
 			mapping = cmp.mapping.preset.insert({
-				["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-				["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
+				["<C-p>"] = cmp.mapping.select_prev_item(),
+				["<C-n>"] = cmp.mapping.select_next_item(),
 				["<C-y>"] = cmp.mapping.confirm({ select = true }),
 				["<C-Space>"] = cmp.mapping.complete(),
 				["<C-u>"] = cmp.mapping.scroll_docs(-4),
