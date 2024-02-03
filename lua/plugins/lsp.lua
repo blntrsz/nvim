@@ -105,7 +105,7 @@ return {
 		vim.keymap.set("n", "gr", function()
 			vim.lsp.buf.references()
 		end)
-		vim.keymap.set("n", "<leader>rn", function()
+		vim.keymap.set("n", "<leader>cr", function()
 			vim.lsp.buf.rename()
 		end)
 		vim.keymap.set("n", "<leader>l", function()
