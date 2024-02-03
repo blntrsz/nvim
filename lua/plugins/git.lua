@@ -3,7 +3,7 @@ return {
 	{
 		"kdheepak/lazygit.nvim",
 		keys = {
-			{ "<leader>e", "<cmd>LazyGit<cr>" },
+			{ "<leader>gg", "<cmd>LazyGit<cr>" },
 		},
 		config = function()
 			-- nvim v0.8.0
