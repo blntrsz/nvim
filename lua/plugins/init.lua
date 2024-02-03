@@ -18,7 +18,7 @@ return {
 		"nvim-lualine/lualine.nvim",
 		event = "BufEnter",
 		config = function()
-			require("lualine").setup({})
+			require("lualine").setup()
 		end,
 	},
 	{
@@ -35,4 +35,24 @@ return {
 		lazy = false,
 	},
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+	{
+		"xiyaowong/transparent.nvim",
+		name = "transparent",
+		lazy = false,
+		config = function()
+			require("transparent").setup()
+		end,
+	},
+	{
+		"folke/neodev.nvim",
+		config = function()
+			require("neodev").setup()
+		end,
+	},
+	{
+		"mbbill/undotree",
+		keys = {
+			{ "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "Undotree" },
+		},
+	},
 }
