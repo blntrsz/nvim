@@ -31,3 +31,5 @@ vim.opt.cursorline = true
 vim.opt.backspace = { "start", "eol", "indent" }
 vim.opt.clipboard = "unnamedplus"
 vim.opt.laststatus = 3
+
+vim.opt.wrap = true
