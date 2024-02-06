@@ -1,6 +1,14 @@
 return {
 	{ "tpope/vim-fugitive", lazy = false },
 	{
+		"akinsho/git-conflict.nvim",
+		version = "*",
+		config = true,
+		keys = {
+			{ "<leader>m", "<cmd>GitConflictListQf<cr>" },
+		},
+	},
+	{
 		"kdheepak/lazygit.nvim",
 		keys = {
 			{ "<leader>gg", "<cmd>LazyGit<cr>" },
