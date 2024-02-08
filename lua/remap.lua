@@ -7,3 +7,4 @@ vim.keymap.set("n", "<leader>ss", "<cmd>vsplit | wincmd L | Telescope git_files<
 
 vim.keymap.set("n", "<leader>j", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<leader>cc", "<cmd>cclose<CR>")

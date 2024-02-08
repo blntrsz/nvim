@@ -1,12 +1,13 @@
 return {
-	{ "tpope/vim-fugitive", lazy = false },
 	{
-		"akinsho/git-conflict.nvim",
-		version = "*",
-		config = true,
-		keys = {
-			{ "<leader>m", "<cmd>GitConflictListQf<cr>" },
-		},
+		"tpope/vim-fugitive",
+		lazy = false,
+		config = function()
+			vim.keymap.set("n", "gh", "<cmd>diffget //2<CR>")
+			vim.keymap.set("n", "gl", "<cmd>diffget //3<CR>")
+			vim.keymap.set("n", "<leader>gl", "<cmd>Git log<CR>")
+			vim.keymap.set("n", "<leader>m", "<cmd>Git mergetool | Gvdiffsplit!<CR>")
+		end,
 	},
 	{
 		"kdheepak/lazygit.nvim",
@@ -33,6 +34,7 @@ return {
 			{ "<leader>gp", "<cmd>Gitsigns prev_hunk<cr>", desc = "Previous hunk" },
 			{ "<leader>gb", "<cmd>Gitsigns blame_line<cr>", desc = "Blame line" },
 			{ "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>", desc = "Reset hunk" },
+			{ "<leader>ghs", "<cmd>Gitsigns stage_hunk<cr>", desc = "Stage Hunk" },
 		},
 		config = function()
 			require("gitsigns").setup()
