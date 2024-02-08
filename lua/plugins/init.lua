@@ -113,4 +113,11 @@ return {
 			{ "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "Undotree" },
 		},
 	},
+	{
+		"nvim-pack/nvim-spectre",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		keys = {
+			{ "<leader>F", '<cmd>lua require("spectre").toggle()<cr>' },
+		},
+	},
 }
