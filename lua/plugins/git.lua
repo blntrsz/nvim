@@ -6,7 +6,6 @@ return {
 			vim.keymap.set("n", "gh", "<cmd>diffget //2<CR>")
 			vim.keymap.set("n", "gl", "<cmd>diffget //3<CR>")
 			vim.keymap.set("n", "<leader>gl", "<cmd>Git log<CR>")
-			vim.keymap.set("n", "<leader>m", "<cmd>Git mergetool | Gvdiffsplit!<CR>")
 		end,
 	},
 	{
