@@ -13,6 +13,7 @@ return {
 				typescript = { "prettier" },
 				typescriptreact = { "prettier" },
 				go = { "goimports", "gofmt" },
+				templ = { "goimports", "templ" },
 			},
 			-- Set up format-on-save
 			format_on_save = { timeout_ms = 1000, lsp_fallback = true },

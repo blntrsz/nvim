@@ -5,7 +5,6 @@ return {
 		keys = {
 			{ "<leader>ca", "<cmd>Lspsaga code_action<cr>" },
 			{ "<leader>cr", "<cmd>Lspsaga rename<cr>" },
-			{ "gr", "<cmd>Lspsaga finder<cr>" },
 			{ "K", "<cmd>Lspsaga hover_doc<cr>" },
 			{ "<leader>o", "<cmd>Lspsaga outline<cr>" },
 		},
@@ -118,6 +117,9 @@ return {
 			})
 			vim.keymap.set("n", "<leader>ws", function()
 				vim.lsp.buf.workspace_symbol()
+			end)
+			vim.keymap.set("n", "gr", function()
+				vim.lsp.buf.references()
 			end)
 			vim.keymap.set("n", "<leader>q", function()
 				vim.diagnostic.open_float()
