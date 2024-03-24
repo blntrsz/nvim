@@ -150,7 +150,4 @@ return {
 			)
 		end,
 	},
-	{
-		"kevinhwang91/nvim-bqf",
-	},
 }

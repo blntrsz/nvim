@@ -119,7 +119,7 @@ return {
 				vim.lsp.buf.workspace_symbol()
 			end)
 			vim.keymap.set("n", "gr", function()
-				vim.lsp.buf.references()
+				require("telescope.builtin").lsp_references()
 			end)
 			vim.keymap.set("n", "<leader>q", function()
 				vim.diagnostic.open_float()
