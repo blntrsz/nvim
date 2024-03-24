@@ -77,7 +77,6 @@ return {
 		"nvim-lua/plenary.nvim",
 		name = "plenary",
 	},
-	"github/copilot.vim",
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
