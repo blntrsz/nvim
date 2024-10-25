@@ -1,5 +1,18 @@
 return {
   {
+    "b0o/schemastore.nvim",
+    config = function()
+      require('lspconfig').jsonls.setup {
+        settings = {
+          json = {
+            schemas = require('schemastore').json.schemas(),
+            validate = { enable = true },
+          },
+        },
+      }
+    end
+  },
+  {
     "L3MON4D3/LuaSnip",
     dependencies = { "rafamadriz/friendly-snippets" },
   },
@@ -51,7 +64,7 @@ return {
       require("mason-lspconfig").setup({
         ensure_installed = {
           "lua_ls",
-          "tsserver",
+          "ts_ls",
         },
         handlers = {
           function(server_name) -- default handler (optional)
@@ -80,6 +93,17 @@ return {
       ls.config.set_config {
         history = false,
         updateevents = "TextChanged,TextChangedI",
+      }
+
+      require('lspconfig')['yamlls'].setup {
+        capabilities = capabilities,
+        settings = {
+          yaml = {
+            schemas = {
+              ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.yaml"] = "/*"
+            }
+          }
+        }
       }
 
       require("luasnip.loaders.from_vscode").lazy_load()
