@@ -2,13 +2,10 @@ return {
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
-    opts = {}, -- this is equalent to setup({}) function
+    opts = {},
   },
   {
     "numToStr/Comment.nvim",
-    opts = {
-      -- add any options here
-    },
     config = function()
       require('Comment').setup({
         pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),

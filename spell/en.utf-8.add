@@ -6,3 +6,6 @@ metadata
 idempotency
 observability
 postgres
+workspace
+workspaces
+authenticator
