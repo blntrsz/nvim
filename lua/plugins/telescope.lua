@@ -18,7 +18,6 @@ return {
     },
   },
   keys = {
-    { "<leader>/",        "<cmd>Telescope live_grep theme=ivy<cr>" },
     { "<leader>ff",       "<cmd>Telescope find_files theme=ivy<cr>" },
     { "<leader>fp",       "<cmd>Telescope pickers theme=ivy<cr>" },
     { "<leader><leader>", "<cmd>Telescope git_files theme=ivy<cr>" },

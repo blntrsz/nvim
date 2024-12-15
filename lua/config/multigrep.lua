@@ -5,7 +5,7 @@ local conf = require("telescope.config").values
 
 local M = {}
 
-local live_multi_grep = function(opts)
+M.live_multi_grep = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or vim.uv.cwd()
 
@@ -45,10 +45,6 @@ local live_multi_grep = function(opts)
     sorter = require("telescope.sorters").empty(),
     previewer = conf.grep_previewer(opts),
   }):find()
-end
-
-M.setup = function()
-  live_multi_grep()
 end
 
 return M
