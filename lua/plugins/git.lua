@@ -28,9 +28,7 @@ return {
     "lewis6991/gitsigns.nvim",
     lazy = false,
     keys = {
-      { "<leader>gh",  "<cmd>Gitsigns preview_hunk<cr>", desc = "Preview hunk" },
-      { "<leader>gn",  "<cmd>Gitsigns next_hunk<cr>",    desc = "Next hunk" },
-      { "<leader>gp",  "<cmd>Gitsigns prev_hunk<cr>",    desc = "Previous hunk" },
+      { "<leader>gp",  "<cmd>Gitsigns preview_hunk<cr>", desc = "Preview hunk" },
       { "<leader>gb",  "<cmd>Gitsigns blame_line<cr>",   desc = "Blame line" },
       { "<leader>gr",  "<cmd>Gitsigns reset_hunk<cr>",   desc = "Reset hunk" },
       { "<leader>ghs", "<cmd>Gitsigns stage_hunk<cr>",   desc = "Stage Hunk" },

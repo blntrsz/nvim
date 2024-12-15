@@ -1,18 +1,5 @@
 return {
   {
-    "b0o/schemastore.nvim",
-    config = function()
-      require('lspconfig').jsonls.setup {
-        settings = {
-          json = {
-            schemas = require('schemastore').json.schemas(),
-            validate = { enable = true },
-          },
-        },
-      }
-    end
-  },
-  {
     "L3MON4D3/LuaSnip",
     dependencies = { "rafamadriz/friendly-snippets" },
   },
@@ -160,7 +147,7 @@ return {
           focusable = false,
           style = "minimal",
           border = "rounded",
-          source = "always",
+          source = true,
           header = "",
           prefix = "",
         },

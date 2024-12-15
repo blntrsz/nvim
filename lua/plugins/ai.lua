@@ -1,4 +1,4 @@
-local stage = require("stage")
+local stage = require("config.stage")
 
 if stage == "personal" then
   return {
