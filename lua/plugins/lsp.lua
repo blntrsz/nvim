@@ -155,7 +155,7 @@ return {
         vim.lsp.buf.workspace_symbol()
       end)
       vim.keymap.set("n", "gr", function()
-        require("telescope.builtin").lsp_references()
+        vim.cmd [[Telescope lsp_references theme=ivy]]
       end)
       vim.keymap.set("n", "<leader>q", function()
         vim.diagnostic.open_float()
