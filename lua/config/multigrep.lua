@@ -2,12 +2,14 @@ local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local make_entry = require("telescope.make_entry")
 local conf = require("telescope.config").values
+local themes = require("telescope.themes")
 
 local M = {}
 
 M.live_multi_grep = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or vim.uv.cwd()
+  opts = themes.get_ivy(opts)
 
   local finder = finders.new_async_job({
     command_generator = function(prompt)
