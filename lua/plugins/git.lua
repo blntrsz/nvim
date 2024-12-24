@@ -4,16 +4,6 @@ return {
     keys = {
       { "<leader>gg", "<cmd>LazyGit<cr>" },
     },
-    config = function()
-      require("lazy").setup({
-        {
-          "kdheepak/lazygit.nvim",
-          dependencies = {
-            "nvim-lua/plenary.nvim",
-          },
-        },
-      })
-    end,
   },
   {
     "lewis6991/gitsigns.nvim",
@@ -31,8 +21,7 @@ return {
   {
     "sindrets/diffview.nvim",
     config = function()
-      vim.keymap.set("n", "do", "<cmd>DiffviewOpen<CR>")
-      vim.keymap.set("n", "dc", "<cmd>DiffviewClose<CR>")
+      require("diffview").setup()
     end,
   },
   {

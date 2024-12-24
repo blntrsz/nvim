@@ -8,3 +8,6 @@ vim.keymap.set("n", "<leader>o", "<cmd>copen<CR>")
 
 vim.keymap.set("v", ">", ">gv")
 vim.keymap.set("v", "<", "<gv")
+
+vim.keymap.set("n", "do", "<cmd>DiffviewOpen<CR>")
+vim.keymap.set("n", "dc", "<cmd>DiffviewClose<CR>")
