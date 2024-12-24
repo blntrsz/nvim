@@ -48,6 +48,12 @@ return {
     {
       "saghen/blink.cmp",
       opts = {
+        completion = {
+          menu = { auto_show = function(ctx) return ctx.mode ~= 'cmdline' end },
+          list = {
+            selection = "auto_insert"
+          },
+        },
         sources = {
           -- add lazydev to your completion providers
           default = { "lazydev", "lsp", "path", "snippets", "buffer" },
