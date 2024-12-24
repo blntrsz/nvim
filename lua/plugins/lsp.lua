@@ -1,72 +1,145 @@
 return {
   {
-    "williamboman/mason.nvim",
+    "L3MON4D3/LuaSnip",
+    dependencies = { "rafamadriz/friendly-snippets" },
+  },
+  {
+    "nvimdev/lspsaga.nvim",
+    after = "nvim-lspconfig",
+    keys = {
+      { "<leader>ca", "<cmd>Lspsaga code_action<cr>" },
+      { "<leader>cr", "<cmd>Lspsaga rename<cr>" },
+      { "K",          "<cmd>Lspsaga hover_doc<cr>" },
+      { "<leader>o",  "<cmd>Lspsaga outline<cr>" },
+    },
     config = function()
-      require("mason").setup()
-      require("mason-lspconfig").setup()
+      require("lspsaga").setup({})
     end,
-  },
-  "williamboman/mason-lspconfig.nvim",
-  {
-    'neovim/nvim-lspconfig',
     dependencies = {
-      'saghen/blink.cmp',
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
     },
-    opts = {
-      servers = {
-        lua_ls = {},
-        vtsls = {},
-        eslint = {},
-        gopls = {},
-        ruby_lsp = {},
-        cssls = {},
-        html = {},
-        jqls = {},
-        pyright = {}
-      }
-    },
-    config = function(_, opts)
-      local lspconfig = require('lspconfig')
-      for server, config in pairs(opts.servers) do
-        config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-        lspconfig[server].setup(config)
-      end
-    end
   },
   {
-    {
-      "folke/lazydev.nvim",
-      ft = "lua", -- only load on lua files
-      opts = {
-        library = {
-          -- See the configuration section for more details
-          -- Load luvit types when the `vim.uv` word is found
-          { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-        },
-      },
+
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+      "hrsh7th/nvim-cmp",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+      "j-hui/fidget.nvim",
     },
-    {
-      "saghen/blink.cmp",
-      opts = {
-        completion = {
-          menu = { auto_show = function(ctx) return ctx.mode ~= 'cmdline' end },
-          list = {
-            selection = "auto_insert"
-          },
+
+    config = function()
+      local cmp = require("cmp")
+      local cmp_lsp = require("cmp_nvim_lsp")
+      local capabilities = vim.tbl_deep_extend(
+        "force",
+        {},
+        vim.lsp.protocol.make_client_capabilities(),
+        cmp_lsp.default_capabilities()
+      )
+
+      require("fidget").setup({})
+      require("mason").setup()
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "lua_ls",
         },
-        sources = {
-          -- add lazydev to your completion providers
-          default = { "lazydev", "lsp", "path", "snippets", "buffer" },
-          providers = {
-            lazydev = {
-              name = "LazyDev",
-              module = "lazydev.integrations.blink",
-              -- make lazydev completions top priority (see `:h blink.cmp`)
-              score_offset = 100,
+        handlers = {
+          function(server_name) -- default handler (optional)
+            require("lspconfig")[server_name].setup({
+              capabilities = capabilities,
+            })
+          end,
+
+          ["lua_ls"] = function()
+            local lspconfig = require("lspconfig")
+            lspconfig.lua_ls.setup({
+              capabilities = capabilities,
+              settings = {
+                Lua = {
+                  diagnostics = {
+                    globals = { "vim", "it", "describe", "before_each", "after_each" },
+                  },
+                },
+              },
+            })
+          end,
+        },
+      })
+
+      require("luasnip.loaders.from_vscode").lazy_load()
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-p>"] = cmp.mapping.select_prev_item(),
+          ["<C-n>"] = cmp.mapping.select_next_item(),
+          ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-d>"] = cmp.mapping.scroll_docs(4),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" }, -- For luasnip users.
+          { name = "path" },
+          { name = "buffer" },
+          {
+            name = "spell",
+            option = {
+              keep_all_entries = false,
+              enable_in_context = function()
+                return true
+              end,
             },
           },
+        }, {
+          { name = "buffer" },
+        }),
+      })
+
+      vim.diagnostic.config({
+        -- update_in_insert = true,
+        float = {
+          focusable = false,
+          style = "minimal",
+          border = "rounded",
+          source = true,
+          header = "",
+          prefix = "",
         },
-      },
-    }
-  }
+      })
+      vim.keymap.set("n", "<leader>ws", function()
+        vim.lsp.buf.workspace_symbol()
+      end)
+      vim.keymap.set("n", "gr", function()
+        vim.cmd [[Telescope lsp_references theme=ivy]]
+      end)
+      vim.keymap.set("n", "<leader>q", function()
+        vim.diagnostic.open_float()
+      end)
+      vim.keymap.set("n", "gd", function()
+        vim.lsp.buf.definition()
+      end)
+      vim.keymap.set("n", "<leader>l", function()
+        vim.diagnostic.goto_next()
+      end)
+      vim.keymap.set("n", "<leader>h", function()
+        vim.diagnostic.goto_prev()
+      end)
+    end,
+  },
 }
