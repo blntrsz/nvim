@@ -1,14 +1,5 @@
 return {
   {
-    "tpope/vim-fugitive",
-    lazy = false,
-    config = function()
-      vim.keymap.set("n", "gh", "<cmd>diffget //2<CR>")
-      vim.keymap.set("n", "gl", "<cmd>diffget //3<CR>")
-      vim.keymap.set("n", "<leader>gl", "<cmd>Git log<CR>")
-    end,
-  },
-  {
     "kdheepak/lazygit.nvim",
     keys = {
       { "<leader>gg", "<cmd>LazyGit<cr>" },
@@ -43,5 +34,17 @@ return {
       vim.keymap.set("n", "do", "<cmd>DiffviewOpen<CR>")
       vim.keymap.set("n", "dc", "<cmd>DiffviewClose<CR>")
     end,
+  },
+  {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "ibhagwan/fzf-lua",
+    },
+    config = true,
+    keys = {
+      { "<leader>ng", "<cmd>Neogit<cr>", desc = "Neogit" },
+    }
   }
 }

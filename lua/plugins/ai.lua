@@ -16,4 +16,4 @@ if stage == "work" then
 end
 
 
-return {}
+error("File `lua/config/stage.lua` has no exported stage with enum `personal` or `work`")

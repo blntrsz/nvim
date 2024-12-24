@@ -12,14 +12,8 @@ return {
       typescript = { "prettierd" },
       typescriptreact = { "prettierd" },
       go = { "goimports", "gofmt" },
-      templ = { "goimports", "templ" },
     },
     -- Set up format-on-save
     format_on_save = { timeout_ms = 1000, lsp_format = "fallback" },
-    -- Customize formatters
-  },
-  init = function()
-    -- If you want the formatexpr, here is the place to set it
-    vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-  end,
+  }
 }
