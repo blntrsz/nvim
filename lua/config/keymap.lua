@@ -11,3 +11,15 @@ vim.keymap.set("v", "<", "<gv")
 
 vim.keymap.set("n", "do", "<cmd>DiffviewOpen<CR>")
 vim.keymap.set("n", "dc", "<cmd>DiffviewClose<CR>")
+
+-- LSP
+vim.keymap.set("n", "<leader>ca", "<cmd>Lspsaga code_action<cr>")
+vim.keymap.set("n", "<leader>cr", "<cmd>Lspsaga rename<cr>")
+vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<cr>")
+vim.keymap.set("n", "<leader>o", "<cmd>Lspsaga outline<cr>")
+vim.keymap.set("n", "<leader>h", "<cmd>Lspsaga diagnostic_jump_prev<cr>")
+vim.keymap.set("n", "<leader>l", "<cmd>Lspsaga diagnostic_jump_next<cr>")
+vim.keymap.set("n", "<leader>q", "<cmd>Lspsaga show_cursor_diagnostics<cr>")
+vim.keymap.set("n", "gd", "<cmd>Lspsaga go_to_definition<cr>")
+
+vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>")

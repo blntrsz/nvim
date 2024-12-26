@@ -2,12 +2,6 @@ return {
   {
     "nvimdev/lspsaga.nvim",
     after = "nvim-lspconfig",
-    keys = {
-      { "<leader>ca", "<cmd>Lspsaga code_action<cr>" },
-      { "<leader>cr", "<cmd>Lspsaga rename<cr>" },
-      { "K",          "<cmd>Lspsaga hover_doc<cr>" },
-      { "<leader>o",  "<cmd>Lspsaga outline<cr>" },
-    },
     config = function()
       require("lspsaga").setup({})
     end,
@@ -30,26 +24,6 @@ return {
         lspconfig_defaults.capabilities,
         require("cmp_nvim_lsp").default_capabilities()
       )
-      vim.api.nvim_create_autocmd("LspAttach", {
-        desc = "LSP actions",
-        callback = function(event)
-          local opts = { buffer = event.buf }
-
-          vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
-          vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-          vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-          vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-          vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
-          vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-          vim.keymap.set(
-            "n",
-            "<leader>vd",
-            "<cmd>lua vim.diagnostic.open_float()<cr>",
-            { desc = "View Diagnostics" }
-          )
-          vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
-        end,
-      })
 
       require("mason").setup()
       require("mason-lspconfig").setup({
@@ -88,51 +62,6 @@ return {
             },
           })
         end,
-      })
-    end,
-  },
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
-      "hrsh7th/cmp-path",
-    },
-    config = function()
-      local cmp = require("cmp")
-      local cmp_select = { behavior = cmp.SelectBehavior.Insert }
-      cmp.setup({
-        sources = {
-          { name = "nvim_lsp" },
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-          ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-          ["<C-y>"] = cmp.mapping.confirm({ select = true }),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
-        }),
-      })
-    end,
-  },
-  {
-    "folke/lazydev.nvim",
-    ft = "lua", -- only load on lua files
-    opts = {
-      library = {
-        -- See the configuration section for more details
-        -- Load luvit types when the `vim.uv` word is found
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-      },
-    },
-  },
-  { -- optional cmp completion source for require statements and module annotations
-    "hrsh7th/nvim-cmp",
-    opts = function(_, opts)
-      opts.sources = opts.sources or {}
-      table.insert(opts.sources, {
-        name = "lazydev",
-        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
       })
     end,
   },
