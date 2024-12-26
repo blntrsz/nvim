@@ -12,6 +12,8 @@ vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("n", "do", "<cmd>DiffviewOpen<CR>")
 vim.keymap.set("n", "dc", "<cmd>DiffviewClose<CR>")
 
+vim.keymap.set("n", "<leader>/", require("config.multigrep").live_multi_grep)
+
 -- LSP
 vim.keymap.set("n", "<leader>ca", "<cmd>Lspsaga code_action<cr>")
 vim.keymap.set("n", "<leader>cr", "<cmd>Lspsaga rename<cr>")
