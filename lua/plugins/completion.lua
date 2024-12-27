@@ -15,6 +15,7 @@ return {
           { name = "nvim_lsp" },
         },
         mapping = cmp.mapping.preset.insert({
+          ["<C-space>"] = cmp.mapping.complete(),
           ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
           ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
           ["<C-y>"] = cmp.mapping.confirm({ select = true }),
