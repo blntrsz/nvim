@@ -24,6 +24,6 @@ vim.keymap.set("n", "<leader>o", "<cmd>Lspsaga outline<cr>")
 vim.keymap.set("n", "<leader>h", "<cmd>Lspsaga diagnostic_jump_prev<cr>")
 vim.keymap.set("n", "<leader>l", "<cmd>Lspsaga diagnostic_jump_next<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>Lspsaga show_cursor_diagnostics<cr>")
-vim.keymap.set("n", "gd", "<cmd>Lspsaga go_to_definition<cr>")
 
+vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>")
 vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>")
