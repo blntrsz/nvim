@@ -4,6 +4,12 @@ local servers = {
   "pyright",
   "jsonls",
   "yamlls",
+  "tailwindcss",
+  "ruby_lsp",
+  "bashls",
+  "cssls",
+  "gopls",
+  "zls",
 }
 
 local completion_servers = {}
