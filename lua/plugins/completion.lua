@@ -1,7 +1,7 @@
 return {
   'saghen/blink.cmp',
   dependencies = 'rafamadriz/friendly-snippets',
-  version = '*',
+  version = '1.*',
 
   ---@module 'blink.cmp'
   ---@type blink.cmp.Config
@@ -26,7 +26,7 @@ return {
     },
     completion = {
       list = {
-        selection = 'auto_insert'
+        selection = { preselect = true, auto_insert = true }
       },
       menu = {
         auto_show = function(ctx) return ctx.mode ~= 'cmdline' end,

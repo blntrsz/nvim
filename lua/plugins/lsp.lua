@@ -5,7 +5,6 @@ local servers = {
   "jsonls",
   "yamlls",
   "tailwindcss",
-  "ruby_lsp",
   "bashls",
   "cssls",
   "gopls",
