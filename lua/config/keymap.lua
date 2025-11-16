@@ -31,3 +31,9 @@ end)
 vim.keymap.set("n", "gr", function()
   vim.lsp.buf.references()
 end)
+
+-- Diff view
+vim.keymap.set("n", "<leader>dd", "<cmd>DiffviewOpen<cr>")
+vim.keymap.set("n", "<leader>dc", "<cmd>DiffviewClose<cr>")
+vim.keymap.set("n", "<leader>dr", "<cmd>DiffviewRefresh<cr>")
+vim.keymap.set("n", "<leader>de", "<cmd>DiffviewToggleFiles<cr>")

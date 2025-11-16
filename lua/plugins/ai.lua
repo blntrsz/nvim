@@ -1,22 +1,61 @@
 return {
   "github/copilot.vim",
   {
-    'NickvanDyke/opencode.nvim',
-    dependencies = { 'folke/snacks.nvim', },
-    ---@type opencode.Config
+    "folke/sidekick.nvim",
     opts = {
-      -- Your configuration, if any
+      -- add any options here
+      cli = {
+        watch = true,
+        mux = {
+          backend = "tmux",
+          enabled = true,
+        },
+      },
+      tools = {
+        opencode = {
+          cmd = { "opencode" },
+          -- HACK: https://github.com/sst/opencode/issues/445
+          env = { OPENCODE_THEME = "system" },
+          url = "https://github.com/sst/opencode",
+        },
+      }
     },
-    -- stylua: ignore
     keys = {
-      { '<leader>ot', function() require('opencode').toggle() end,                           desc = 'Toggle embedded opencode', },
-      { '<leader>oa', function() require('opencode').ask() end,                              desc = 'Ask opencode',                 mode = 'n', },
-      { '<leader>oa', function() require('opencode').ask('@selection: ') end,                desc = 'Ask opencode about selection', mode = 'v', },
-      { '<leader>op', function() require('opencode').select_prompt() end,                    desc = 'Select prompt',                mode = { 'n', 'v', }, },
-      { '<leader>on', function() require('opencode').command('session_new') end,             desc = 'New session', },
-      { '<leader>oy', function() require('opencode').command('messages_copy') end,           desc = 'Copy last message', },
-      { '<S-C-u>',    function() require('opencode').command('messages_half_page_up') end,   desc = 'Scroll messages up', },
-      { '<S-C-d>',    function() require('opencode').command('messages_half_page_down') end, desc = 'Scroll messages down', },
+      {
+        "<tab>",
+        function()
+          -- if there is a next edit, jump to it, otherwise apply it if any
+          if not require("sidekick").nes_jump_or_apply() then
+            return "<Tab>" -- fallback to normal tab
+          end
+        end,
+        expr = true,
+        desc = "Goto/Apply Next Edit Suggestion",
+      },
+      {
+        "<c-.>",
+        function()
+          require("sidekick.cli").focus()
+        end,
+        mode = { "n", "x", "i", "t" },
+        desc = "Sidekick Switch Focus",
+      },
+      {
+        "<leader>aa",
+        function()
+          require("sidekick.cli").toggle({ name = "opencode", focus = true })
+        end,
+        desc = "Sidekick Toggle CLI",
+        mode = { "n", "v" },
+      },
+      {
+        "<leader>ap",
+        function()
+          require("sidekick.cli").select_prompt()
+        end,
+        desc = "Sidekick Ask Prompt",
+        mode = { "n", "v" },
+      },
     },
-  },
+  }
 }

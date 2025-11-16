@@ -1,4 +1,5 @@
 return {
+  { "ThePrimeagen/git-worktree.nvim" },
   {
     "kdheepak/lazygit.nvim",
     keys = {
