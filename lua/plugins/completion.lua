@@ -1,6 +1,16 @@
 return {
   'saghen/blink.cmp',
-  dependencies = 'rafamadriz/friendly-snippets',
+  dependencies = {
+    'rafamadriz/friendly-snippets',
+    {
+      'saghen/blink.compat',
+      version = '2.*',
+      lazy = true,
+      opts = {},
+    },
+    'hrsh7th/nvim-cmp',
+    'Kaiser-Yang/blink-cmp-avante',
+  },
   version = '1.*',
 
   ---@module 'blink.cmp'
@@ -54,6 +64,42 @@ return {
           module = "lazydev.integrations.blink",
           -- make lazydev completions top priority (see `:h blink.cmp`)
           score_offset = 100,
+        },
+        -- Avante chat input completions (only active in AvanteInput)
+        avante = {
+          name = 'Avante',
+          module = 'blink-cmp-avante',
+          score_offset = 90,
+        },
+        avante_commands = {
+          name = 'avante_commands',
+          module = 'blink.compat.source',
+          score_offset = 90,
+        },
+        avante_files = {
+          name = 'avante_files',
+          module = 'blink.compat.source',
+          score_offset = 100,
+        },
+        avante_mentions = {
+          name = 'avante_mentions',
+          module = 'blink.compat.source',
+          score_offset = 1000,
+        },
+        avante_shortcuts = {
+          name = 'avante_shortcuts',
+          module = 'blink.compat.source',
+          score_offset = 1000,
+        },
+      },
+      per_filetype = {
+        AvanteInput = {
+          inherit_defaults = true,
+          'avante',
+          'avante_commands',
+          'avante_mentions',
+          'avante_shortcuts',
+          'avante_files',
         },
       },
     },

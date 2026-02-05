@@ -1,61 +1,78 @@
 return {
   "github/copilot.vim",
   {
-    "folke/sidekick.nvim",
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    version = false, -- Never set this value to "*"! Never!
+    ---@module 'avante'
+    ---@type avante.Config
     opts = {
-      -- add any options here
-      cli = {
-        watch = true,
-        mux = {
-          backend = "tmux",
-          enabled = true,
+      -- add any opts here
+      -- this file can contain specific instructions for your project
+      instructions_file = "avante.md",
+      -- for example
+      provider = "copilot",
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      --- The below dependencies are optional,
+      "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+      "hrsh7th/nvim-cmp",              -- autocompletion for avante commands and mentions
+      "ibhagwan/fzf-lua",              -- for file_selector provider fzf
+      "stevearc/dressing.nvim",        -- for input provider dressing
+      "folke/snacks.nvim",             -- for input provider snacks
+      "nvim-tree/nvim-web-devicons",   -- or echasnovski/mini.icons
+      "zbirenbaum/copilot.lua",        -- for providers='copilot'
+      {
+        -- support for image pasting
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            use_absolute_path = true,
+          },
         },
       },
-      tools = {
-        opencode = {
-          cmd = { "opencode" },
-          -- HACK: https://github.com/sst/opencode/issues/445
-          env = { OPENCODE_THEME = "system" },
-          url = "https://github.com/sst/opencode",
+      {
+        -- Make sure to set this up properly if you have lazy=true
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { "markdown", "Avante" },
         },
-      }
-    },
-    keys = {
-      {
-        "<tab>",
-        function()
-          -- if there is a next edit, jump to it, otherwise apply it if any
-          if not require("sidekick").nes_jump_or_apply() then
-            return "<Tab>" -- fallback to normal tab
-          end
-        end,
-        expr = true,
-        desc = "Goto/Apply Next Edit Suggestion",
-      },
-      {
-        "<c-.>",
-        function()
-          require("sidekick.cli").focus()
-        end,
-        mode = { "n", "x", "i", "t" },
-        desc = "Sidekick Switch Focus",
-      },
-      {
-        "<leader>aa",
-        function()
-          require("sidekick.cli").toggle({ name = "opencode", focus = true })
-        end,
-        desc = "Sidekick Toggle CLI",
-        mode = { "n", "v" },
-      },
-      {
-        "<leader>ap",
-        function()
-          require("sidekick.cli").select_prompt()
-        end,
-        desc = "Sidekick Ask Prompt",
-        mode = { "n", "v" },
+        ft = { "markdown", "Avante" },
       },
     },
-  }
+  },
+  {
+    "copilotlsp-nvim/copilot-lsp",
+    init = function()
+      vim.g.copilot_nes_debounce = 500
+
+      vim.keymap.set("n", "<tab>", function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local state = vim.b[bufnr].nes_state
+        if state then
+          local _ = require("copilot-lsp.nes").walk_cursor_start_edit()
+              or (
+                require("copilot-lsp.nes").apply_pending_nes()
+                and require("copilot-lsp.nes").walk_cursor_end_edit()
+              )
+          return nil
+        end
+
+        return "<C-i>"
+      end, { desc = "Copilot NES accept", expr = true })
+    end,
+    config = function()
+      require("copilot-lsp").setup()
+    end,
+  },
 }
