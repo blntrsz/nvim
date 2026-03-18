@@ -1,5 +1,4 @@
 return {
-  { "ThePrimeagen/git-worktree.nvim" },
   {
     "kdheepak/lazygit.nvim",
     keys = {
@@ -18,6 +17,36 @@ return {
     config = function()
       require("gitsigns").setup()
     end,
+  },
+  {
+    "esmuellert/codediff.nvim",
+    cmd = "CodeDiff",
+    opts = {
+      diff = {
+        layout = "inline",
+      },
+      keymaps = {
+        view = {
+          quit = false,
+        },
+      },
+    },
+    config = function(_, opts)
+      require("codediff").setup(opts)
+
+      local augroup = vim.api.nvim_create_augroup("config_codediff", { clear = true })
+      vim.api.nvim_create_autocmd("User", {
+        group = augroup,
+        pattern = "CodeDiffOpen",
+        callback = function(args)
+          local tabpage = args.data and args.data.tabpage or vim.api.nvim_get_current_tabpage()
+          require("config.codediff").map_quit(tabpage)
+        end,
+      })
+    end,
+    keys = {
+      { "<leader>gd", "<cmd>CodeDiff<cr>", desc = "CodeDiff" },
+    },
   },
   {
     "sindrets/diffview.nvim",

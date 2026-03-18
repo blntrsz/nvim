@@ -1,3 +1,5 @@
+local codediff = require("config.codediff")
+
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
@@ -9,31 +11,67 @@ vim.keymap.set("n", "<leader>o", "<cmd>copen<CR>")
 vim.keymap.set("v", ">", ">gv")
 vim.keymap.set("v", "<", "<gv")
 
-vim.keymap.set("n", "do", "<cmd>DiffviewOpen<CR>")
-vim.keymap.set("n", "dc", "<cmd>DiffviewClose<CR>")
+local function with_codediff(fn)
+  local ok, lifecycle = pcall(require, "codediff.ui.lifecycle")
+  if not ok then
+    return
+  end
+
+  local tabpage = vim.api.nvim_get_current_tabpage()
+  local session = lifecycle.get_session(tabpage)
+  if not session then
+    return
+  end
+
+  fn(lifecycle, session, tabpage)
+end
+
+local function codediff_open()
+  local ok, lifecycle = pcall(require, "codediff.ui.lifecycle")
+  if ok and lifecycle.get_session(vim.api.nvim_get_current_tabpage()) then
+    return
+  end
+
+  vim.cmd("CodeDiff")
+end
+
+local function codediff_close()
+  codediff.close()
+end
+
+local function codediff_refresh()
+  with_codediff(function(lifecycle, session, tabpage)
+    local panel = lifecycle.get_explorer(tabpage)
+    if not panel then
+      return
+    end
+
+    local ui = session.mode == "history" and require("codediff.ui.history") or require("codediff.ui.explorer")
+    ui.refresh(panel)
+  end)
+end
+
+local function codediff_toggle_panel()
+  with_codediff(function(lifecycle, session, tabpage)
+    local panel = lifecycle.get_explorer(tabpage)
+    if not panel then
+      return
+    end
+
+    local ui = session.mode == "history" and require("codediff.ui.history") or require("codediff.ui.explorer")
+    ui.toggle_visibility(panel)
+  end)
+end
+
+vim.keymap.set("n", "do", codediff_open)
+vim.keymap.set("n", "dc", codediff_close)
 
 vim.keymap.set("n", "<leader>/", function()
   require("config.multigrep").live_multi_grep()
 end)
 
--- LSP
-vim.keymap.set("n", "<leader>ca", "<cmd>Lspsaga code_action<cr>")
-vim.keymap.set("n", "<leader>cr", "<cmd>Lspsaga rename<cr>")
-vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<cr>")
-vim.keymap.set("n", "<leader>o", "<cmd>Lspsaga outline<cr>")
-vim.keymap.set("n", "<leader>h", "<cmd>Lspsaga diagnostic_jump_prev<cr>")
-vim.keymap.set("n", "<leader>l", "<cmd>Lspsaga diagnostic_jump_next<cr>")
-vim.keymap.set("n", "<leader>q", "<cmd>Lspsaga show_cursor_diagnostics<cr>")
-
-vim.keymap.set("n", "gd", function()
-  vim.lsp.buf.definition()
-end)
-vim.keymap.set("n", "gr", function()
-  vim.lsp.buf.references()
-end)
-
--- Diff view
-vim.keymap.set("n", "<leader>dd", "<cmd>DiffviewOpen<cr>")
-vim.keymap.set("n", "<leader>dc", "<cmd>DiffviewClose<cr>")
-vim.keymap.set("n", "<leader>dr", "<cmd>DiffviewRefresh<cr>")
-vim.keymap.set("n", "<leader>de", "<cmd>DiffviewToggleFiles<cr>")
+-- CodeDiff
+vim.keymap.set("n", "<leader>dd", codediff_open)
+vim.keymap.set("n", "<leader>dc", codediff_close)
+vim.keymap.set("n", "<leader>dr", codediff_refresh)
+vim.keymap.set("n", "<leader>de", codediff_toggle_panel)

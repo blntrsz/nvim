@@ -2,14 +2,6 @@ return {
   'saghen/blink.cmp',
   dependencies = {
     'rafamadriz/friendly-snippets',
-    {
-      'saghen/blink.compat',
-      version = '2.*',
-      lazy = true,
-      opts = {},
-    },
-    'hrsh7th/nvim-cmp',
-    'Kaiser-Yang/blink-cmp-avante',
   },
   version = '1.*',
 
@@ -19,90 +11,50 @@ return {
     keymap = {
       preset = 'none',
       ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<C-e>'] = { 'cancel', 'fallback' },
       ['<CR>'] = { 'accept', 'fallback' },
       ['<C-y>'] = { 'accept', 'fallback' },
 
       ['<Up>'] = { 'select_prev', 'fallback' },
       ['<Down>'] = { 'select_next', 'fallback' },
-      ['<C-p>'] = { 'select_prev', 'fallback' },
-      ['<C-n>'] = { 'select_next', 'fallback' },
+      ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
+      ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
 
       ['<C-l>'] = { 'snippet_forward', 'fallback' },
       ['<C-h>'] = { 'snippet_backward', 'fallback' },
+      ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
     },
     signature = {
       enabled = true,
-      window = { border = 'single' }
+      window = { border = 'single' },
     },
     completion = {
       list = {
-        selection = { preselect = true, auto_insert = true }
+        selection = { preselect = true, auto_insert = true },
       },
       menu = {
-        auto_show = function(ctx) return ctx.mode ~= 'cmdline' end,
+        auto_show = function(ctx)
+          return ctx.mode ~= 'cmdline'
+        end,
       },
       documentation = { auto_show = true, auto_show_delay_ms = 50, window = { border = 'single' } },
     },
 
     appearance = {
-      -- Sets the fallback highlight groups to nvim-cmp's highlight groups
-      -- Useful for when your theme doesn't support blink.cmp
-      -- Will be removed in a future release
       use_nvim_cmp_as_default = true,
-      -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-      -- Adjusts spacing to ensure icons are aligned
-      nerd_font_variant = 'mono'
+      nerd_font_variant = 'mono',
     },
 
-    -- Default list of enabled providers defined so that you can extend it
-    -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
-      default = { "lazydev", 'lsp', 'path', 'snippets', 'buffer' },
+      default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
       providers = {
         lazydev = {
-          name = "LazyDev",
-          module = "lazydev.integrations.blink",
-          -- make lazydev completions top priority (see `:h blink.cmp`)
+          name = 'LazyDev',
+          module = 'lazydev.integrations.blink',
           score_offset = 100,
-        },
-        -- Avante chat input completions (only active in AvanteInput)
-        avante = {
-          name = 'Avante',
-          module = 'blink-cmp-avante',
-          score_offset = 90,
-        },
-        avante_commands = {
-          name = 'avante_commands',
-          module = 'blink.compat.source',
-          score_offset = 90,
-        },
-        avante_files = {
-          name = 'avante_files',
-          module = 'blink.compat.source',
-          score_offset = 100,
-        },
-        avante_mentions = {
-          name = 'avante_mentions',
-          module = 'blink.compat.source',
-          score_offset = 1000,
-        },
-        avante_shortcuts = {
-          name = 'avante_shortcuts',
-          module = 'blink.compat.source',
-          score_offset = 1000,
-        },
-      },
-      per_filetype = {
-        AvanteInput = {
-          inherit_defaults = true,
-          'avante',
-          'avante_commands',
-          'avante_mentions',
-          'avante_shortcuts',
-          'avante_files',
         },
       },
     },
   },
-  opts_extend = { "sources.default" }
+  opts_extend = { 'sources.default' },
 }
