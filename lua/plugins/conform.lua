@@ -1,113 +1,90 @@
-local is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
-
-local eslint_roots = {
-  "eslint.config.js",
-  "eslint.config.mjs",
-  "eslint.config.cjs",
-  "eslint.config.ts",
-  "eslint.config.mts",
-  "eslint.config.cts",
-  ".eslintrc",
-  ".eslintrc.js",
-  ".eslintrc.cjs",
-  ".eslintrc.yaml",
-  ".eslintrc.yml",
-  ".eslintrc.json",
-}
-
-local function buf_dir(bufnr)
-  local filename = vim.api.nvim_buf_get_name(bufnr)
-  if filename == "" then
-    return vim.fn.getcwd()
+vim.api.nvim_create_user_command("ConformDisable", function(args)
+  if args.bang then
+    -- FormatDisable! will disable formatting just for this buffer
+    vim.b.disable_autoformat = true
+  else
+    vim.g.disable_autoformat = true
   end
+end, {
+  desc = "Disable conform-autoformat-on-save",
+  bang = true,
+})
 
-  return vim.fs.dirname(filename)
-end
-
-local function has_local_bin(bin, bufnr)
-  local dir = buf_dir(bufnr)
-  local executable = is_windows and (bin .. ".cmd") or bin
-
-  while dir and dir ~= "" do
-    local path = vim.fs.joinpath(dir, "node_modules", ".bin", executable)
-    if vim.fn.executable(path) == 1 then
-      return true
-    end
-
-    local parent = vim.fs.dirname(dir)
-    if parent == dir then
-      break
-    end
-    dir = parent
-  end
-
-  return false
-end
-
-local function pick_local(bufnr, choices)
-  for _, choice in ipairs(choices) do
-    if has_local_bin(choice.bin, bufnr) then
-      return choice.name
-    end
-  end
-end
-
-local function js_formatters(bufnr)
-  local formatters = {}
-
-  local linter = pick_local(bufnr, {
-    { name = "oxlint", bin = "oxlint" },
-    { name = "eslint", bin = "eslint" },
-  })
-
-  local formatter = pick_local(bufnr, {
-    { name = "oxfmt",    bin = "oxfmt" },
-    { name = "prettier", bin = "prettier" },
-  })
-
-  if linter then
-    table.insert(formatters, linter)
-  end
-
-  if formatter then
-    table.insert(formatters, formatter)
-  end
-
-  return formatters
-end
-
-local function eslint_cwd(_, ctx)
-  return vim.fs.root(ctx.dirname, eslint_roots) or vim.fs.root(ctx.dirname, { "package.json" })
-end
+vim.api.nvim_create_user_command("ConformEnable", function()
+  vim.b.disable_autoformat = false
+  vim.g.disable_autoformat = false
+end, {
+  desc = "Re-enable conform-autoformat-on-save",
+})
 
 return {
-  "stevearc/conform.nvim",
-  event = { "BufWritePre" },
-  cmd = { "ConformInfo" },
-  opts = function()
-    local util = require("conform.util")
-
-    return {
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    opts = {
+      notify_on_error = false,
+      default_format_opts = {
+        async = true,
+        timeout_ms = 500,
+        lsp_format = "fallback",
+      },
+      format_after_save = function(buffer_number)
+        if vim.g.disable_autoformat or vim.b[buffer_number].disable_autoformat then
+          return
+        end
+        return {
+          async = true,
+          timeout_ms = 500,
+          lsp_format = "fallback",
+        }
+      end,
+      formatters_by_ft = {
+        astro = { "oxfmt", "biome", "prettierd", stop_after_first = true },
+        javascript = { "oxfmt", "biome", "prettierd", stop_after_first = true },
+        typescript = { "oxfmt", "biome", "prettierd", stop_after_first = true },
+        typescriptreact = { "oxfmt", "biome", "prettierd", stop_after_first = true },
+        svelte = { "oxfmt", "prettierd", stop_after_first = true },
+        lua = { "stylua" },
+      },
       formatters = {
-        eslint = {
-          command = util.from_node_modules(is_windows and "eslint.cmd" or "eslint"),
-          args = { "--fix", "$FILENAME" },
-          cwd = eslint_cwd,
-          exit_codes = { 0, 1 },
-          stdin = false,
-          tmpfile_format = "conform.$RANDOM.$FILENAME",
+        oxfmt = {
+          condition = function(_, ctx)
+            return vim.fs.find({ ".oxfmtrc.json", ".oxfmtrc.jsonc" }, {
+              path = ctx.filename,
+              upward = true,
+              stop = vim.uv.os_homedir(),
+            })[1] ~= nil
+          end,
+        },
+        biome = {
+          condition = function(_, ctx)
+            return vim.fs.find({ "biome.json", "biome.jsonc" }, {
+              path = ctx.filename,
+              upward = true,
+              stop = vim.uv.os_homedir(),
+            })[1] ~= nil
+          end,
+        },
+        prettierd = {
+          condition = function(_, ctx)
+            return vim.fs.find({
+              ".prettierrc",
+              ".prettierrc.json",
+              ".prettierrc.js",
+              ".prettierrc.cjs",
+              ".prettierrc.mjs",
+              "prettier.config.js",
+              "prettier.config.cjs",
+              "prettier.config.mjs",
+            }, {
+              path = ctx.filename,
+              upward = true,
+              stop = vim.uv.os_homedir(),
+            })[1] ~= nil
+          end,
         },
       },
-      formatters_by_ft = {
-        lua = { "stylua" },
-        python = { "isort", "black" },
-        javascript = js_formatters,
-        javascriptreact = js_formatters,
-        typescript = js_formatters,
-        typescriptreact = js_formatters,
-        go = { "goimports", "gofmt" },
-      },
-      format_on_save = { timeout_ms = 1000, lsp_format = "fallback" },
-    }
-  end,
+    },
+  },
 }
