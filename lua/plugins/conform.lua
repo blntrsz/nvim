@@ -56,13 +56,13 @@ local function js_formatters(bufnr)
   local formatters = {}
 
   local linter = pick_local(bufnr, {
-    { name = "eslint", bin = "eslint" },
     { name = "oxlint", bin = "oxlint" },
+    { name = "eslint", bin = "eslint" },
   })
 
   local formatter = pick_local(bufnr, {
+    { name = "oxfmt",    bin = "oxfmt" },
     { name = "prettier", bin = "prettier" },
-    { name = "oxfmt", bin = "oxfmt" },
   })
 
   if linter then
